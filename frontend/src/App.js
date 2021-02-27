@@ -1,58 +1,40 @@
 // import images from "../public/images";
-import data from "./data";
+import HomeScreen from "./screens/HomeScreen";
+import CartScreen from "./screens/CartScreen";
+import ProductScreen from "./screens/ProductScreen";
+import { BrowserRouter, Router, Route, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function App() {
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
   return (
-    <div className="grid-container">
-      <header className="row">
-        <div>
-          <a className="brand" href="index.html">
-            amazona
-          </a>
-        </div>
-        <div>
-          <a href="cart.html">Cart</a>
-          <a href="signin.html">Sign In</a>
-        </div>
-      </header>
-      <main>
-        <div>
-          <div className="row center">
-            {data.products.map((product) => (
-              <div key={product._id} className="card">
-                <a href={`/product/${product._id}`}>
-                  <img className="medium" src={product.image} alt={product.name} />
-                </a>
-                <div className="card-body">
-                  <a href={`/product/${product._id}`}>
-                    <h2>{product.name}</h2>
-                  </a>
-                  <div className="rating">
-                    <span>
-                      <i className="fa fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa fa-star"></i>
-                    </span>
-                  </div>
-                  <div className="price">${product.price}</div>
-                </div>
-              </div>
-            ))}
+    <BrowserRouter>
+      <div className="grid-container">
+        <header className="row">
+          <div>
+            <Link className="brand" to="/">
+              amazona
+            </Link>
           </div>
-        </div>
-      </main>
-      <footer className="row center">All right reserved</footer>
-    </div>
+          <div>
+            <Link to="/cart">
+              Cart
+              {cartItems.length > 0 && (
+                <span className="badge">{cartItems.length}</span>
+              )}
+            </Link>
+            <Link to="/signin">Sign In</Link>
+          </div>
+        </header>
+        <main>
+          <Route path="/cart/:id?" component={CartScreen}></Route>
+          <Route path="/product/:id" exact component={ProductScreen}></Route>
+          <Route path="/" exact component={HomeScreen}></Route>
+        </main>
+        <footer className="row center">All right reserved</footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
